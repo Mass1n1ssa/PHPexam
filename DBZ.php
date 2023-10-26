@@ -55,17 +55,35 @@ class Hero extends Character
 
 class Evil extends Character
 {
-    
-
     public function __construct($name, $hp, $damage)
     {
-        parent::__construct($name, $hp, $damage);
-        
+        parent::__construct($name, $hp, $damage);   
     }
 }
 
 class Game 
 {
+    public function choiceCharacter($camp) {
+        echo "Choisissez votre personnage : \n\n";
+
+        echo "[1] Goku \n[2] Vegeta\n\n";
+
+        $choiceCharacter = (int) readline("Votre choix : ");
+
+        if ($camp == 1)        
+
+        if ($choiceCharacter == 1) {
+            echo "Vous avez choisi Goku !\n\n";
+        } else if ($choiceCharacter == 2) {
+            echo "Vous avez choisi Vegeta !\n\n";
+        } else {
+            echo "Veuillez saisir un choix valide !";
+            sleep(1);
+            popen('cls', 'w');
+            return $this->choiceCharacter();
+        }
+    }
+
     public function choiceCamp()
     {
         echo "Choisissez votre camp : \n\n";
@@ -75,10 +93,9 @@ class Game
         $choiceCamp = (int) readline("Votre choix : ");
 
         if ($choiceCamp == 1) {
-            echo "Vous avez choisi le camp des héros !\n\n";
-
+            $this->choiceCharacter($choiceCamp);
         } else if ($choiceCamp == 2) {
-            echo "Vous avez choisi le camp des méchants !\n\n";
+            $this->choiceCharacter($choiceCamp);
         } else {
             echo "Veuillez saisir un choix valide !";
             sleep(1);
@@ -103,6 +120,7 @@ class Game
                 $this->choiceCamp();
                 break;
             case 2:
+                $this->getInformations();
                 break;
             case 3:
                 break;
@@ -115,8 +133,13 @@ class Game
     }
 }
 
-$goku = new Hero("Goku", 100, 10);
-$vegeta = new Evil("Vegeta", 150, 15);
+// $goku = new Hero("Goku", 100, 10);
+// $vegeta = new Evil("Vegeta", 150, 15);
+
+$characters = [
+    $goku = new Hero("Goku", 100, 10),
+    $vegeta = new Evil("Vegeta", 150, 15),
+];
 
 $game = new Game();
 $game->startGame();
