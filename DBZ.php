@@ -1,22 +1,23 @@
 <?php 
-    Class personnage{
-        protected $nom;
-        protected $puissance;
-        protected $vie;
-
-        public function __construct($nom,$puissance,$vie){
-            $this->nom = $nom;
-            $this->puissance = $puissance;
-            $this->vie = $vie;
-        }
+    class Character {
+        public $name;
+        public $powerLevel;
+        public $hp;
+    }
+    
+    public function __construct($name, $powerLevel, $hp) {
+        $this->name = $name;
+        $this->powerLevel = $powerLevel;
+        $this->hp = $hp;
     }
 
-    Class heros extends personnage{
-        public function __construct($nom,$puissance,$vie){
-            parent::__construct($nom,$puissance,$vie);
-        }
+    class Hero extends Character {
+
     }
 
+    class Evil extends Character {
+
+    }
     
 
 ?>
