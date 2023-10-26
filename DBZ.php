@@ -78,6 +78,13 @@ class Game
         $this->characters = $characters;
     }
 
+    public function displayError()
+    {
+        echo "Veuillez saisir un choix valide !";
+        sleep(1);
+        popen('cls', 'w');
+    }
+
     public function getInfo(){
         echo "Informations :\n\n";
         foreach ($this->characters as $character) {
@@ -101,8 +108,7 @@ class Game
         popen('cls', 'w');
 
         if ($choiceCharacter == null) {
-            echo "Veuillez saisir un choix valide !";
-            sleep(1);
+            $this->displayError();
             return $this->choiceCharacter($typeClass);
         }
 
@@ -111,8 +117,7 @@ class Game
                 if ($choiceCharacter == $i + 1) {
                     echo "Vous avez choisit " . $this->characters[$i]->getName() . " !\n\n";
                 } else if ($choiceCharacter > count($this->characters)) {
-                    echo "Veuillez saisir un choix valide !";
-                    sleep(1);
+                    $this->displayError();
                     return $this->choiceCharacter($typeClass);
                 } 
             }
@@ -133,8 +138,7 @@ class Game
         } else if ($choiceCamp == 2) {
             $this->choiceCharacter("Evil");
         } else {
-            echo "Veuillez saisir un choix valide !";
-            sleep(1);
+            $this->displayError();
             return $this->choiceCamp();
         }
     }
@@ -162,8 +166,7 @@ class Game
                 popen('cls', 'w');
                 break;
             default:
-                echo "Veuillez saisir un choix valide !";
-                sleep(2);
+                $this->displayError();
                 return $this->startGame();
         }
     }
