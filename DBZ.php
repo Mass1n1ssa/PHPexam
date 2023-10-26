@@ -1,4 +1,13 @@
 <?php 
-    echo "despee";
+    class personnage {
+        public $nom;
+        public $level;
+        public $pv;
+      
+    }
+    
+    
+    echo "bonjour"
+    
 
 ?>
