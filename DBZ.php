@@ -15,9 +15,11 @@
         }
     }
     
-    class Hero extends Character {
-        public function __construct($name, $powerLevel, $hp) {
-            parent::__construct($name, $powerLevel, $hp);
+    class Hero extends Character 
+    {
+        public function __construct($name, $powerLevel, $hp, $damage)
+        {
+            parent::__construct($name, $powerLevel, $hp, $damage);
         }
 
         public function attack($target) {
@@ -32,6 +34,10 @@
     }
 
     class Evil extends Character {
+        public function __construct($name, $powerLevel, $hp, $damage)
+        {
+            parent::__construct($name, $powerLevel, $hp, $damage);
+        }
     
         public function __construct($name, $powerlevel, $hp, $special) {
             parent::__construct($name, $powerlevel, $hp);
