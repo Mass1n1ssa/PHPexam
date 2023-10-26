@@ -32,14 +32,19 @@ class Character // Creation of the class Character
         return $this->ki;
     }
 
-    public function setKi($ki)
+    public function getDamage()
     {
-        $this->ki = $ki;
+        return $this->damage;
     }
 
     public function getHp()
     {
         return $this->hp;
+    }
+
+    public function setKi($ki)
+    {
+        $this->ki = $ki;
     }
 
     public function setHp($hp)
@@ -115,12 +120,15 @@ class Game
             popen('cls', 'w');
 
             $valueKi = $currentCharacter->getKi();
-            
+
             switch ($choiceAction) 
             {
                 case 1:
                     echo "Vous avez attaquer ! ";
-                    $currentCharacter->setHp($currentCharacter->getHp() - 50);
+                    echo $currentCharacter->getDamage() . " points de dégats ont été infligés !\n";
+                    $currentCharacter->setHp($currentCharacter->getHp() - 10);
+                    $currentCharacter->setKi($valueKi + 1);
+                    
                     sleep(2);
                     popen('cls', 'w');
                     return $this->fight($currentCharacter);
@@ -132,6 +140,7 @@ class Game
                 case 3:
                     if ($valueKi >= 5) { // Si le personnage a 5 points de puissance ou plus, il peut utiliser une attaque spéciale
                         $currentCharacter->setKi($valueKi - 5);
+                        $currentCharacter->setHp($currentCharacter->getHp() - 30);
                         echo "Vous avez fait une attaque spéciale ! ";
                         sleep(2);
                         popen('cls', 'w');
