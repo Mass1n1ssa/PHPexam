@@ -9,7 +9,7 @@ class Character
     public function __construct($name, $hp, $damage)
     {
         $this->name = $name;
-        $this->ki = 0 ;
+        $this->ki = $ki;
         $this->hp = $hp;
         $this->damage = $damage;
     }
@@ -20,6 +20,13 @@ class Character
         $this->ki += 10;
         echo $this->name . " attaque " . $target->name . " et lui inflige " . $this->damage . " points de dégats ! \n" . $this->name . " a maintenant " . $this->ki . " points de puissance ! \n";
         echo $target->name . " a maintenant " . $target->hp . " points de vie ! \n";
+    }
+
+    public function getInformations()
+    {
+        echo "\e[31mNom\e[0m : " . $this->name . "\n";
+        echo "\033[38;5;208mClasse\e[0m : " . $this->class . "\n";
+        echo "\e[32mNiveau\e[0m : " . $this->level . "\n";
     }
 
     public function getName()
@@ -40,9 +47,9 @@ class Character
 
 class Hero extends Character
 {
-    public function __construct($name, $ki, $hp, $damage)
+    public function __construct($name, $hp, $damage)
     {
-        parent::__construct($name, $ki, $hp, $damage);
+        parent::__construct($name, $hp, $damage);
     }
 }
 
@@ -50,28 +57,23 @@ class Evil extends Character
 {
     
 
-    public function __construct($name, $ki, $hp, $damage)
+    public function __construct($name, $hp, $damage)
     {
         parent::__construct($name, $ki, $hp, $damage);
         
     }
-
-    // Fonction pour afficher le menu principal
-function afficherMenuPrincipal() {
-    echo "Menu de Jeu\n";
-    echo "1. Devenir un Héros\n";
-    echo "2. Devenir un Méchant\n";
-    echo "3. Quitter\n";
-    echo "Faites votre choix : ";
 }
 
-// Fonction pour afficher le menu des personnages héros
-function afficherMenuHeros() {
-    echo "Personnages Héros\n";
-    echo "1. Goku\n";
-    echo "2. Vegeta\n";
-    echo "3. Gohan\n";
-    echo "4. Retour au menu principal\n";
-    echo "Faites votre choix : ";
-}
-}
+$goku = new Hero("Goku", 9000, 100, 10);
+$vegeta = new Evil("Vegeta", 8000, 150, 15);
+
+// Test
+echo "Avant l'attaque : \n";
+echo $goku->getName() . " a " . $goku->getKi() . " points de puissance et " . $goku->getHp() . " points de vie.\n";
+echo $vegeta->getName() . " a " . $vegeta->getKi() . " points de puissance et " . $vegeta->getHp() . " points de vie.\n";
+
+echo "\nAprès l'attaque :\n";
+$goku->attack($vegeta);
+
+echo "\nAprès l'attaque de Vegeta :\n";
+$vegeta->attack($goku);
