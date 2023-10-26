@@ -1,48 +1,77 @@
-<?php 
-    class Character {
-    public $name;
-    public $powerLevel;
-    public $hp;
-   
+<?php
+class Character
+{
+    protected string $name;
+    protected int $ki;
+    protected int $hp;
+    protected int $damage;
 
-    public function __construct($name, $powerLevel, $hp) {
+    public function __construct($name, $hp, $damage)
+    {
         $this->name = $name;
-        $this->powerLevel = $powerLevel;
+        $this->ki = 0 ;
         $this->hp = $hp;
-        echo" Bienvenue sur Dokkan Batlle! choisissez votre personnage";
+        $this->damage = $damage;
     }
 
-    public function attack($target) {
-        $target->hp -= $this->powerLevel;
-        if ($target->hp <= 0) {
-            echo $target->name . " est mort !";
-        } else {
-            echo $target->name . " a survécu !";
-        }
+    public function attack($target)
+    {
+        $target->hp -= $this->damage;
+        $this->ki += 10;
+        echo $this->name . " attaque " . $target->name . " et lui inflige " . $this->damage . " points de dégats ! \n" . $this->name . " a maintenant " . $this->ki . " points de puissance ! \n";
+        echo $target->name . " a maintenant " . $target->hp . " points de vie ! \n";
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getKi()
+    {
+        return $this->ki;
+    }
+
+    public function getHp()
+    {
+        return $this->hp;
     }
 }
 
-class Hero extends Character {
-    public function __construct($name, $powerLevel, $hp) {
-        parent::__construct($name, $powerLevel, $hp);
+class Hero extends Character
+{
+    public function __construct($name, $ki, $hp, $damage)
+    {
+        parent::__construct($name, $ki, $hp, $damage);
     }
 }
 
-class Evil extends Character {
-    public $special;
-
-    public function __construct($name, $powerLevel, $hp, $special) {
-        parent::__construct($name, $powerLevel, $hp);
-        $this->special = $special;
-    }
-}
-
-$goku = new Hero("Goku", 9000, 100);
-$vegeta = new Hero("Vegeta", 8000, 150);
-
-$freezer = new Evil("Freezer", 12000, 200, "Transformations multiples");
-$cell = new Evil("Cell", 14000, 250, "Absorption des androïdes");
-
+class Evil extends Character
+{
     
 
-?>
+    public function __construct($name, $ki, $hp, $damage)
+    {
+        parent::__construct($name, $ki, $hp, $damage);
+        
+    }
+
+    // Fonction pour afficher le menu principal
+function afficherMenuPrincipal() {
+    echo "Menu de Jeu\n";
+    echo "1. Devenir un Héros\n";
+    echo "2. Devenir un Méchant\n";
+    echo "3. Quitter\n";
+    echo "Faites votre choix : ";
+}
+
+// Fonction pour afficher le menu des personnages héros
+function afficherMenuHeros() {
+    echo "Personnages Héros\n";
+    echo "1. Goku\n";
+    echo "2. Vegeta\n";
+    echo "3. Gohan\n";
+    echo "4. Retour au menu principal\n";
+    echo "Faites votre choix : ";
+}
+}
