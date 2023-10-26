@@ -1,5 +1,5 @@
 <?php
-class Character
+class Character // Creation of the class Character
 {
     protected string $name;
     protected int $ki;
@@ -22,8 +22,6 @@ class Character
         echo $target->name . " a maintenant " . $target->hp . " points de vie ! \n";
     }
 
-    
-
     public function getName()
     {
         return $this->name;
@@ -45,11 +43,7 @@ class Character
         echo "\033[38;5;208mKi\e[0m : " . $this->ki . "\n";
         echo "\e[32mPoint de Vie\e[0m : " . $this->hp . "\n\n";
     }
-
-    
 }
-
-
 
 class Hero extends Character
 {
@@ -59,19 +53,13 @@ class Hero extends Character
     }
 }
 
-
-
 class Evil extends Character
 {
-    
-
     public function __construct($name, $hp, $damage)
     {
         parent::__construct($name, $hp, $damage);
-        
     }
 }
-
 
 class Game 
 {
@@ -82,14 +70,13 @@ class Game
     }
 
     public function getInfo(){
-        echo "Informations\n\n";
+        echo "Informations :\n\n";
         foreach ($this->characters as $character) {
             echo $character->getInformations();
         }
     }
 
     public function choiceChar($c){
-        echo "choisissez votre personnage\n\n";
         $i = 1;
         foreach ($this->characters as $character) {
             if ($character instanceof $c) {
@@ -97,42 +84,43 @@ class Game
                 $i++;
             }
         }
+
+        echo "Choisissez votre personnage\n\n";
+
+        $choiceChar = (int) readline("Votre choix : ");
+
+        for ($i = 0; $i < count($this->characters); $i++) {
+            if ($this->characters[$i] instanceof $c) {
+                if ($choiceChar == $i + 1) {
+                    $this->characters[$i]->getInformations();
+                }
+            }
+        }
     }
+
     public function choiceCamp()
     {
         echo "Choisissez votre camp : \n\n";
-
         echo "[1] Héro \n[2] Méchant\n\n";
 
         $choiceCamp = (int) readline("Votre choix : ");
 
+        popen('cls', 'w');
+
         if ($choiceCamp == 1) {
             $this->choiceChar("Hero");
-            // echo "choisissez votre hero\n\n";
-            // $i = 1;
-            // foreach ($this->characters as $character) {
-            //     if ($character instanceof Hero) {
-            //         echo "[" . $i . "] " . $character->getName() . "\n";
-            //         $i++;
-            //     }
-            // }
-
         } else if ($choiceCamp == 2) {
             $this->choiceChar("Evil");
         } else {
             echo "Veuillez saisir un choix valide !";
             sleep(1);
-            popen('cls', 'w');
             return $this->choiceCamp();
         }
     }
 
-    
-
     public function startGame()
     {
         echo "Dragon Ball Z\n\n";
-
         echo "[1] Jouer \n[2] Infos \n[3] Charger une sauvegarde \n[4] Quitter\n\n";
 
         $choiceMenu = (int) readline("Que voulez vous faire ? : ");
@@ -142,11 +130,9 @@ class Game
         switch ($choiceMenu) 
         {
             case 1:
-                $this->choiceCamp();
-                break;
+                return $this->choiceCamp();
             case 2:
-                $this->getInfo();
-                break;
+                return $this->getInfo();
             case 3:
                 break;
             case 4:
@@ -154,12 +140,15 @@ class Game
                 sleep(2);
                 popen('cls', 'w');
                 break;
+            default:
+                echo "Veuillez saisir un choix valide !";
+                sleep(2);
+                return $this->startGame();
         }
     }
 }
 
-
-$characters = [
+$characters = [ // Creation of characters
     $goku = new Hero("Goku", 100, 10),
     $picolo = new Hero("Picolo", 100, 10),
     $vegeta = new Hero("Vegeta", 150, 15),
@@ -168,8 +157,7 @@ $characters = [
     $buu = new Evil("Buu", 250, 25)
 ];
 
-
-$game = new Game($characters);
+$game = new Game($characters); 
 $game->startGame();
 
 
