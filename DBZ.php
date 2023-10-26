@@ -12,7 +12,7 @@
     }
 
 
-class Heros extends Personnage {
+class Heros extends Character {
 
     public function __construct($name, $powerlevel, $, $special) {
         parent::__construct($name, $powerlevel, $hp);
@@ -22,7 +22,7 @@ class Heros extends Personnage {
    
 }
 
-class Evil extends Personnage {
+class Evil extends Character {
   
     public function __construct($name, $powerlevel, $hp, $special) {
         parent::__construct($name, $powerlevel, $hp);
