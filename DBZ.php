@@ -6,10 +6,10 @@ class Character
     protected int $hp;
     protected int $damage;
 
-    public function __construct($name, $ki, $hp, $damage)
+    public function __construct($name, $hp, $damage)
     {
         $this->name = $name;
-        $this->ki = $ki;
+        $this->ki = 0;
         $this->hp = $hp;
         $this->damage = $damage;
     }
@@ -40,9 +40,9 @@ class Character
 
 class Hero extends Character
 {
-    public function __construct($name, $ki, $hp, $damage)
+    public function __construct($name, $hp, $damage)
     {
-        parent::__construct($name, $ki, $hp, $damage);
+        parent::__construct($name, $hp, $damage);
     }
 }
 
@@ -50,15 +50,35 @@ class Evil extends Character
 {
     
 
-    public function __construct($name, $ki, $hp, $damage)
+    public function __construct($name, $hp, $damage)
     {
-        parent::__construct($name, $ki, $hp, $damage);
+        parent::__construct($name, $hp, $damage);
         
     }
 }
+Class Save {
+    // Sauvegarde du personnage
+    $gokuData = serialize($goku);
+    $vegetaData = serialize($vegeta);
 
-$goku = new Hero("Goku", 9000, 100, 10);
-$vegeta = new Evil("Vegeta", 8000, 150, 15);
+    // Enregistrement dans un fichier (par exemple)
+    file_put_contents('goku_save.txt', $gokuData);
+    file_put_contents('vegeta_save.txt', $vegetaData);
+
+}
+Class load {
+    // Chargement des données depuis le fichier
+    $gokuData = file_get_contents('goku_save.txt');
+    $vegetaData = file_get_contents('vegeta_save.txt');
+
+    // Restauration des objets
+    $goku = unserialize($gokuData);
+    $vegeta = unserialize($vegetaData);
+
+}
+
+$goku = new Hero("Goku", 100, 10);
+$vegeta = new Evil("Vegeta", 150, 15);
 
 // Test
 echo "Avant l'attaque : \n";
