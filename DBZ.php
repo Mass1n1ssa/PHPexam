@@ -43,6 +43,15 @@ class Character // Creation of the class Character
         echo "\033[38;5;208mKi\e[0m : " . $this->ki . "\n";
         echo "\e[32mPoint de Vie\e[0m : " . $this->hp . "\n\n";
     }
+
+    public function IsDead()
+    {
+        if ($this->hp <= 0) {
+            echo $this->name . " est mort !\n";
+            return true;
+        }
+        return false;
+    }
 }
 
 class Hero extends Character
