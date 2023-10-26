@@ -96,24 +96,25 @@ class Game
 
         echo "\n";
 
-        $choiceChar = (int) readline("Votre choix : ");
+        $choiceCharacter = (int) readline("Votre choix : ");
 
         popen('cls', 'w');
 
-        $validChoice = false;
+        if ($choiceCharacter == null) {
+            echo "Veuillez saisir un choix valide !";
+            sleep(1);
+            return $this->choiceCharacter($typeClass);
+        }
 
         for ($i = 0; $i < count($this->characters); $i++) {
             if ($this->characters[$i] instanceof $typeClass) {
-                if ($choiceChar == $i + 1) {
+                if ($choiceCharacter == $i + 1) {
                     echo "Vous avez choisit " . $this->characters[$i]->getName() . " !\n\n";
-                    $validChoice = true;
-                }
-
-                if (!$validChoice) {
-                    echo "Veuillez saisir un choix valide !\n";
+                } else if ($choiceCharacter > count($this->characters)) {
+                    echo "Veuillez saisir un choix valide !";
                     sleep(1);
                     return $this->choiceCharacter($typeClass);
-                }
+                } 
             }
         }
     }
