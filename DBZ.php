@@ -49,6 +49,8 @@ class Character
     
 }
 
+
+
 class Hero extends Character
 {
     public function __construct($name, $hp, $damage)
@@ -56,6 +58,8 @@ class Hero extends Character
         parent::__construct($name, $hp, $damage);
     }
 }
+
+
 
 class Evil extends Character
 {
@@ -67,6 +71,8 @@ class Evil extends Character
         
     }
 }
+
+
 class Game 
 {
     private array $characters;
@@ -74,10 +80,22 @@ class Game
     {
         $this->characters = $characters;
     }
+
     public function getInfo(){
         echo "Informations\n\n";
         foreach ($this->characters as $character) {
             echo $character->getInformations();
+        }
+    }
+
+    public function choiceChar($c){
+        echo "choisissez votre personnage\n\n";
+        $i = 1;
+        foreach ($this->characters as $character) {
+            if ($character instanceof $c) {
+                echo "[" . $i . "] " . $character->getName() . "\n";
+                $i++;
+            }
         }
     }
     public function choiceCamp()
@@ -89,10 +107,18 @@ class Game
         $choiceCamp = (int) readline("Votre choix : ");
 
         if ($choiceCamp == 1) {
-            echo "Vous avez choisi le camp des héros !\n\n";
+            $this->choiceChar("Hero");
+            // echo "choisissez votre hero\n\n";
+            // $i = 1;
+            // foreach ($this->characters as $character) {
+            //     if ($character instanceof Hero) {
+            //         echo "[" . $i . "] " . $character->getName() . "\n";
+            //         $i++;
+            //     }
+            // }
 
         } else if ($choiceCamp == 2) {
-            echo "Vous avez choisi le camp des méchants !\n\n";
+            $this->choiceChar("Evil");
         } else {
             echo "Veuillez saisir un choix valide !";
             sleep(1);
@@ -131,10 +157,15 @@ class Game
         }
     }
 }
+
+
 $characters = [
     $goku = new Hero("Goku", 100, 10),
     $picolo = new Hero("Picolo", 100, 10),
-    $vegeta = new Evil("Vegeta", 150, 15)
+    $vegeta = new Hero("Vegeta", 150, 15),
+    $cell = new Evil("Cell", 200, 20),
+    $freezer = new Evil("Freezer", 200, 20),
+    $buu = new Evil("Buu", 250, 25)
 ];
 
 
