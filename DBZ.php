@@ -39,18 +39,14 @@ class Character
         return $this->hp;
     }
     
-    // public function getInformations()
-    // {
-    //     echo "\e[31mNom\e[0m : " . $this->name . "\n";
-    //     echo "\033[38;5;208mClasse\e[0m : " . $this->ki . "\n";
-    //     echo "\e[32mNiveau\e[0m : " . $this->hp . "\n";
-    // }
-
-    public function getInformations() {
-        echo $this->name . "\n";
-        echo $this->ki . "\n";
-        echo $this->hp . "\n";
+    public function getInformations()
+    {
+        echo "\e[31mNom\e[0m : " . $this->name . "\n";
+        echo "\033[38;5;208mKi\e[0m : " . $this->ki . "\n";
+        echo "\e[32mPoint de Vie\e[0m : " . $this->hp . "\n\n";
     }
+
+    
 }
 
 class Hero extends Character
@@ -79,6 +75,7 @@ class Game
         $this->characters = $characters;
     }
     public function getInfo(){
+        echo "Informations\n\n";
         foreach ($this->characters as $character) {
             echo $character->getInformations();
         }
