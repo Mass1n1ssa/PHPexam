@@ -87,9 +87,9 @@ class Game
 
     public function choiceCharacter($typeClass){
         echo "Choisissez votre personnage :\n\n";
-
-        for ($index = 0; $index < count($this->characters); $index++) {
-            if ($this->characters[$index] instanceof $typeClass) {
+ 
+        for ($index = 0; $index < count($this->characters); $index++) { // Boucle pour afficher les personnages en fonction du camp choisi
+            if ($this->characters[$index] instanceof $typeClass) { // Ex : si $typeClass = "Hero" alors uniquement les personnages de type Hero seront affichés
                 echo "[" . ($index + 1) . "] " . $this->characters[$index]->getName() . "\n";
             }
         }
@@ -100,25 +100,22 @@ class Game
 
         popen('cls', 'w');
 
-        /*Afficher ensuite le personnage choisit de mannière modulaire (si le personnage est un héro, afficher en vert, si c'est un méchant, afficher en rouge)*/
+        $validChoice = false;
 
-        if ($typeClass == "Hero") {
-            echo "\e[32mVous avez choisi " . $this->characters[$choiceChar - 1]->getName() . "\e[0m\n\n";
-        } else if ($typeClass == "Evil") {
-            echo "\e[31mVous avez choisi " . $this->characters[$choiceChar - 1]->getName() . "\e[0m\n\n";
+        for ($i = 0; $i < count($this->characters); $i++) {
+            if ($this->characters[$i] instanceof $typeClass) {
+                if ($choiceChar == $i + 1) {
+                    echo "Vous avez choisit " . $this->characters[$i]->getName() . " !\n\n";
+                    $validChoice = true;
+                }
+
+                if (!$validChoice) {
+                    echo "Veuillez saisir un choix valide !\n";
+                    sleep(1);
+                    return $this->choiceCharacter($typeClass);
+                }
+            }
         }
-
-        // for ($i = 0; $i < count($this->characters); $i++) {
-        //     if ($this->characters[$i] instanceof $typeClass) {
-        //         if ($choiceChar == $i + 1) {
-        //             echo "Vous avez choisit " . $this->characters[$i]->getName() . " !\n\n";
-        //         } else if ($choiceChar > count($this->characters)) {
-        //             echo "Veuillez saisir un choix valide !";
-        //             sleep(1);
-        //             return $this->choiceCharacter($typeClass);
-        //         }
-        //     }
-        // }
     }
 
     public function choiceCamp()
