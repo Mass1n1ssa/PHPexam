@@ -22,20 +22,24 @@
             parent::__construct($name, $powerLevel, $hp, $damage);
         }
 
-        public function attack($target) {
+        public function attack($target) 
+        {
             $target->hp -= $this->damage;
             $this->powerLevel += 10;
             echo $this->name . " attaque " . $target->name . " et lui inflige " . $this->$damage . " points de dégats ! <br>" . $this->name . " a maintenant " . $this->powerLevel . " points de puissance ! <br>" ;
+            
         }
     }
 
-    class Evil extends Character {
+    class Evil extends Character 
+    {
         public function __construct($name, $powerLevel, $hp, $damage)
         {
             parent::__construct($name, $powerLevel, $hp, $damage);
         }
     
-        public function __construct($name, $powerlevel, $hp, $special) {
+        public function __construct($name, $powerlevel, $hp, $special) 
+        {
             parent::__construct($name, $powerlevel, $hp);
             $this->special = $special;
         }
