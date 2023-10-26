@@ -23,13 +23,9 @@
         }
 
         public function attack($target) {
-            $target->hp -= $this->powerLevel;
-            
-            if ($target->hp <= 0) {
-                echo $target->name . " est mort !";
-            } else {
-                echo $target->name . " a survécu !";
-            }
+            $target->hp -= $this->damage;
+            $this->powerLevel += 10;
+            echo $this->name . " attaque " . $target->name . " et lui inflige " . $this->$damage . " points de dégats ! <br>" . $this->name . " a maintenant " . $this->powerLevel . " points de puissance ! <br>" ;
         }
     }
 
