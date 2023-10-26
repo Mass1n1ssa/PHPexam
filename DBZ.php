@@ -14,7 +14,10 @@
     class Hero extends Character {
 
     }
-    
+
+    class Evil extends Character {
+
+    }
     
 
 ?>
