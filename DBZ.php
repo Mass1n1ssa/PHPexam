@@ -11,10 +11,23 @@
         $this->hp = $hp;
     }
 
-    class Hero extends Character {
 
+class Heros extends Personnage {
+
+    public function __construct($name, $powerlevel, $, $special) {
+        parent::__construct($name, $powerlevel, $hp);
+        $this->special = $special;
     }
-    
-    
+
+   
+}
+
+class Evil extends Personnage {
+  
+    public function __construct($name, $powerlevel, $hp, $special) {
+        parent::__construct($name, $powerlevel, $hp);
+        $this->plan_malicieux = $plan_malicieux;
+    }
+}
 
 ?>
