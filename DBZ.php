@@ -1,17 +1,17 @@
 <?php 
-    class personnage {
-        public $nom;
-        public $level;
-        public $pv;
-      
+    class Character {
+        public $name;
+        public $powerLevel;
+        public $hp;
     }
     
-    public function __construct($nom, $level, $pv) {
-        $this->nom = $nom;
-        $this->niveau_de_puissance = $niveau_de_puissance;
-        $this->points_de_vie = $points_de_vie;
+    public function __construct($name, $powerLevel, $hp) {
+        $this->name = $name;
+        $this->powerLevel = $powerLevel;
+        $this->hp = $hp;
     }
-    class hero extends personnage {
+
+    class Hero extends Character {
 
     }
     
