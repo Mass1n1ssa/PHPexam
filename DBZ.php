@@ -26,9 +26,15 @@
         }
     }
 
-    class Evil extends Character {
+   
 
-    }
+
+    class Evil extends Character {
     
+        public function __construct($name, $powerlevel, $hp, $special) {
+            parent::__construct($name, $powerlevel, $hp);
+            $this->special = $special;
+        }
+    }
 
 ?>
