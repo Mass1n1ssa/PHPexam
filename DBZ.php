@@ -76,26 +76,40 @@ class Game
         }
     }
 
-    public function choiceChar($c){
-        $i = 1;
-        foreach ($this->characters as $character) {
-            if ($character instanceof $c) {
-                echo "[" . $i . "] " . $character->getName() . "\n";
-                $i++;
+    public function choiceCharacter($typeClass){
+        echo "Choisissez votre personnage :\n\n";
+
+        for ($index = 0; $index < count($this->characters); $index++) {
+            if ($this->characters[$index] instanceof $typeClass) {
+                echo "[" . ($index + 1) . "] " . $this->characters[$index]->getName() . "\n";
             }
         }
 
-        echo "Choisissez votre personnage\n\n";
+        echo "\n";
 
         $choiceChar = (int) readline("Votre choix : ");
 
-        for ($i = 0; $i < count($this->characters); $i++) {
-            if ($this->characters[$i] instanceof $c) {
-                if ($choiceChar == $i + 1) {
-                    $this->characters[$i]->getInformations();
-                }
-            }
+        popen('cls', 'w');
+
+        /*Afficher ensuite le personnage choisit de mannière modulaire (si le personnage est un héro, afficher en vert, si c'est un méchant, afficher en rouge)*/
+
+        if ($typeClass == "Hero") {
+            echo "\e[32mVous avez choisi " . $this->characters[$choiceChar - 1]->getName() . "\e[0m\n\n";
+        } else if ($typeClass == "Evil") {
+            echo "\e[31mVous avez choisi " . $this->characters[$choiceChar - 1]->getName() . "\e[0m\n\n";
         }
+
+        // for ($i = 0; $i < count($this->characters); $i++) {
+        //     if ($this->characters[$i] instanceof $typeClass) {
+        //         if ($choiceChar == $i + 1) {
+        //             echo "Vous avez choisit " . $this->characters[$i]->getName() . " !\n\n";
+        //         } else if ($choiceChar > count($this->characters)) {
+        //             echo "Veuillez saisir un choix valide !";
+        //             sleep(1);
+        //             return $this->choiceCharacter($typeClass);
+        //         }
+        //     }
+        // }
     }
 
     public function choiceCamp()
@@ -108,9 +122,9 @@ class Game
         popen('cls', 'w');
 
         if ($choiceCamp == 1) {
-            $this->choiceChar("Hero");
+            $this->choiceCharacter("Hero");
         } else if ($choiceCamp == 2) {
-            $this->choiceChar("Evil");
+            $this->choiceCharacter("Evil");
         } else {
             echo "Veuillez saisir un choix valide !";
             sleep(1);
@@ -148,7 +162,7 @@ class Game
     }
 }
 
-$characters = [ // Creation of characters
+$characters = [ // Création des personnages
     $goku = new Hero("Goku", 100, 10),
     $picolo = new Hero("Picolo", 100, 10),
     $vegeta = new Hero("Vegeta", 150, 15),
