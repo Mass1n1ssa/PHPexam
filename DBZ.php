@@ -26,7 +26,7 @@ class Evil extends Personnage {
   
     public function __construct($name, $powerlevel, $hp, $special) {
         parent::__construct($name, $powerlevel, $hp);
-        $this->plan_malicieux = $plan_malicieux;
+        $this->special = $special;
     }
 }
 
