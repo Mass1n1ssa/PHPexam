@@ -22,13 +22,6 @@ class Character
         echo $target->name . " a maintenant " . $target->hp . " points de vie ! \n";
     }
 
-    public function getInformations()
-    {
-        echo "\e[31mNom\e[0m : " . $this->name . "\n";
-        echo "\033[38;5;208mClasse\e[0m : " . $this->class . "\n";
-        echo "\e[32mNiveau\e[0m : " . $this->level . "\n";
-    }
-
     public function getName()
     {
         return $this->name;
@@ -42,6 +35,13 @@ class Character
     public function getHp()
     {
         return $this->hp;
+    }
+    
+    public function getInformations()
+    {
+        echo "\e[31mNom\e[0m : " . $this->name . "\n";
+        echo "\033[38;5;208mKi\e[0m : " . $this->ki . "\n";
+        echo "\e[32mPoint de Vie\e[0m : " . $this->hp . "\n\n";
     }
 }
 
@@ -63,24 +63,19 @@ class Evil extends Character
 
 class Game 
 {
-    public function choiceCharacter($camp) {
-        echo "Choisissez votre personnage : \n\n";
+    private array $characters;
 
-        echo "[1] Goku \n[2] Vegeta\n\n";
+    public function __construct(array $characters)
+    {
+        $this->characters = $characters;
+    }
 
-        $choiceCharacter = (int) readline("Votre choix : ");
+    public function getInfo()
+    {
+        echo "Informations\n\n";
 
-        if ($camp == 1)        
-
-        if ($choiceCharacter == 1) {
-            echo "Vous avez choisi Goku !\n\n";
-        } else if ($choiceCharacter == 2) {
-            echo "Vous avez choisi Vegeta !\n\n";
-        } else {
-            echo "Veuillez saisir un choix valide !";
-            sleep(1);
-            popen('cls', 'w');
-            return $this->choiceCharacter();
+        foreach ($this->characters as $character) {
+            echo $character->getInformations();
         }
     }
 
@@ -120,7 +115,7 @@ class Game
                 $this->choiceCamp();
                 break;
             case 2:
-                $this->getInformations();
+                $this->getInfo();
                 break;
             case 3:
                 break;
@@ -133,16 +128,14 @@ class Game
     }
 }
 
-// $goku = new Hero("Goku", 100, 10);
-// $vegeta = new Evil("Vegeta", 150, 15);
-
 $characters = [
     $goku = new Hero("Goku", 100, 10),
-    $vegeta = new Evil("Vegeta", 150, 15),
+    $vegeta = new Evil("Vegeta", 150, 15)
 ];
 
-$game = new Game();
+$game = new Game($characters);
 $game->startGame();
+
 
 // // Test
 // echo "Avant l'attaque : \n";
