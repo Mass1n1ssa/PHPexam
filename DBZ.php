@@ -126,7 +126,7 @@ class Game
                 case 1:
                     echo "Vous avez attaquer ! ";
                     echo $currentCharacter->getDamage() . " points de dégats ont été infligés !\n";
-                    $currentCharacter->setHp($currentCharacter->getHp() - 10);
+                    $currentCharacter->setHp($currentCharacter->getHp() - $currentCharacter->getDamage());
                     $currentCharacter->setKi($valueKi + 1);
                     
                     sleep(2);
