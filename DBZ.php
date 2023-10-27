@@ -32,14 +32,19 @@ class Character // Creation of the class Character
         return $this->ki;
     }
 
-    public function setKi($ki)
+    public function getDamage()
     {
-        $this->ki = $ki;
+        return $this->damage;
     }
 
     public function getHp()
     {
         return $this->hp;
+    }
+
+    public function setKi($ki)
+    {
+        $this->ki = $ki;
     }
 
     public function setHp($hp)
@@ -121,23 +126,33 @@ class Game
             popen('cls', 'w');
 
             $valueKi = $currentCharacter->getKi();
-            
+
+            for ($index = 0; $index < count($this->characters); $index++) { // Boucle pour afficher les personnages en fonction du camp choisi
+                if (!($this->characters[$index] instanceof $typeClass)) { // Ex : si $typeClass = "Hero" alors uniquement les personnages de type Hero seront affichés
+                    echo $this->characters[$index]->getName() . "\n";
+                }
+            }
+
             switch ($choiceAction) 
             {
                 case 1:
                     echo "Vous avez attaquer ! ";
-                    $currentCharacter->setHp($currentCharacter->getHp() - 50);
+                    echo $currentCharacter->getDamage() . " points de dégats ont été infligés !\n";
+                    $currentCharacter->setHp($currentCharacter->getHp() - $currentCharacter->getDamage());
+                    $currentCharacter->setKi($valueKi + 1);
+                    
                     sleep(2);
                     popen('cls', 'w');
-                    return $this->fight($currentCharacter);
+                    return $this->fight($currentCharacter, $typeClass);
                 case 2: 
                     echo "Vous avez fuit ! ";
                     sleep(2);
                     popen('cls', 'w');
-                    return $this->fight($currentCharacter);
+                    return $this->fight($currentCharacter, $typeClass);
                 case 3:
                     if ($valueKi >= 5) { // Si le personnage a 5 points de puissance ou plus, il peut utiliser une attaque spéciale
                         $currentCharacter->setKi($valueKi - 5);
+                        $currentCharacter->setHp($currentCharacter->getHp() - 30);
                         echo "Vous avez fait une attaque spéciale ! ";
                         sleep(2);
                         popen('cls', 'w');
@@ -145,7 +160,7 @@ class Game
                         echo "Vous n'avez pas assez de points de puissance ! ";
                         sleep(2);
                         popen('cls', 'w');
-                        return $this->fight($currentCharacter);
+                        return $this->fight($currentCharacter, $typeClass);
                     }
                     break;
                 default:
@@ -156,6 +171,7 @@ class Game
                     sleep(2);
                     popen('cls', 'w');
                     return $this->saveGame();
+                    return $this->fight($currentCharacter, $typeClass);
             }
             popen('cls', 'w');
         }
@@ -193,7 +209,7 @@ class Game
             if ($this->characters[$i] instanceof $typeClass) {
                 if ($choiceCharacter == $i + 1) {
                     // $this->characters[$i]->setKi(10); // TEST A SUPPRIMER
-                    $this->fight($this->characters[$i]); // Lancement du combat avec le personnage choisi
+                    $this->fight($this->characters[$i], $typeClass); // Lancement du combat avec le personnage choisi
                 } else if ($choiceCharacter > count($this->characters)) {
                     $this->displayError();
                     return $this->choiceCharacter($typeClass);
