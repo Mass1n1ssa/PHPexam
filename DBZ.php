@@ -79,13 +79,10 @@ class Evil extends Character
 class Game 
 {
     private array $characters;
-    private $currentCharacter;
-    
 
     public function __construct(array $characters)
     {
         $this->characters = $characters;
-        
     }
 
     public function displayError()
@@ -111,15 +108,42 @@ class Game
         }
         return false;
     }
-    
-    public function fight($currentCharacter) 
+
+    public function choiceEnemies($typeClass)
     {
-        $this->currentCharacter = $currentCharacter; // Sauvegarde du personnage en cours de combat
-        while ($this->IsDead($currentCharacter) == false) { // Boucle pour vérifier si le personnage est mort
+        for ($index = 0; $index < count($this->characters); $index++) { // Boucle pour afficher les personnages en fonction du camp choisi
+            if (!($this->characters[$index] instanceof $typeClass)) { // Ex : si $typeClass = "Hero" alors uniquement les personnages de type Hero seront affichés
+                // return $this->characters[$index];
+                $enemies[] = $this->characters[$index];
+            }
+        }
+
+        return $enemies;
+    }
+
+    public function startFight($currentCharacter, $typeClass)
+    {
+        $enemies = $this->choiceEnemies($typeClass);
+
+        for ($i = 0; $i < 3; $i++ ) {
+            if ($i < count ($enemies))
+                $this->fight($currentCharacter, $enemies[$i]);
+            else {
+                popen('cls', 'w');
+                echo "Vous avez fini le jeu !";
+                return;
+            }
+        }
+    }
+    
+    public function fight($currentCharacter, $currentEnemies) 
+    {
+        while ($this->IsDead($currentCharacter) == false && $this->IsDead($currentEnemies) == false) {
             echo "🧙 " . $currentCharacter->getName() . " | ❤️  " . $currentCharacter->getHp() . " | 💥 " . $currentCharacter->getKi() . "\n\n";
-            
-            
-            echo "[1] Attaquer\n[2] Fuir\n[3] Attaque spéciale\n [4] Sauvegarder\n\n";
+
+            echo "Vous fait un combat contre " . $currentEnemies->getName() ."". $currentEnemies->getHp() . "\n";
+
+            echo "[1] Attaquer\n[2] Fuir\n[3] Attaque spéciale\n[4] Sauvegarder\n\n";
             
             $choiceAction = (int) readline("Que voulez vous faire ? : ");
 
@@ -127,28 +151,21 @@ class Game
 
             $valueKi = $currentCharacter->getKi();
 
-            for ($index = 0; $index < count($this->characters); $index++) { // Boucle pour afficher les personnages en fonction du camp choisi
-                if (!($this->characters[$index] instanceof $typeClass)) { // Ex : si $typeClass = "Hero" alors uniquement les personnages de type Hero seront affichés
-                    echo $this->characters[$index]->getName() . "\n";
-                }
-            }
-
             switch ($choiceAction) 
             {
                 case 1:
-                    echo "Vous avez attaquer ! ";
-                    echo $currentCharacter->getDamage() . " points de dégats ont été infligés !\n";
-                    $currentCharacter->setHp($currentCharacter->getHp() - $currentCharacter->getDamage());
-                    $currentCharacter->setKi($valueKi + 1);
+                    echo "Vous avez fait infligé " . $currentEnemies->getDamage() . " dégats à ennemi"; //METTRE ICI LE NOM DE L'ENNEMIE
+                    $currentEnemies->setHp($currentEnemies->getHp() - $currentEnemies->getDamage());
+                    $currentEnemies->setKi($valueKi + 1);
                     
                     sleep(2);
                     popen('cls', 'w');
-                    return $this->fight($currentCharacter, $typeClass);
+                    return $this->fight($currentCharacter, $currentEnemies);
                 case 2: 
                     echo "Vous avez fuit ! ";
                     sleep(2);
                     popen('cls', 'w');
-                    return $this->fight($currentCharacter, $typeClass);
+                    return $this->fight($currentCharacter, $currentEnemies);
                 case 3:
                     if ($valueKi >= 5) { // Si le personnage a 5 points de puissance ou plus, il peut utiliser une attaque spéciale
                         $currentCharacter->setKi($valueKi - 5);
@@ -160,18 +177,17 @@ class Game
                         echo "Vous n'avez pas assez de points de puissance ! ";
                         sleep(2);
                         popen('cls', 'w');
-                        return $this->fight($currentCharacter, $typeClass);
+                        return $this->fight($currentCharacter, $currentEnemies);
                     }
                     break;
-                default:
-                    $this->displayError();
-                    return $this->fight($currentCharacter);
                 case 4:
-                    echo "Sauvegarde en cours...";
+                    echo "sauvegarde en cours ...";
                     sleep(2);
                     popen('cls', 'w');
-                    return $this->saveGame();
-                    return $this->fight($currentCharacter, $typeClass);
+                    return $this->saveGame($currentCharacter, $currentEnemies);
+                default:
+                    $this->displayError();
+                    return $this->fight($currentCharacter, $currentEnemies);
             }
             popen('cls', 'w');
         }
@@ -208,8 +224,11 @@ class Game
         for ($i = 0; $i < count($this->characters); $i++) {
             if ($this->characters[$i] instanceof $typeClass) {
                 if ($choiceCharacter == $i + 1) {
-                    // $this->characters[$i]->setKi(10); // TEST A SUPPRIMER
-                    $this->fight($this->characters[$i], $typeClass); // Lancement du combat avec le personnage choisi
+                    // $this->fight($this->characters[$i], $this->characters[$i]);
+
+                    // $this->startFight($currentCharacter, $currentEnemies); // CORRECT
+                    $this->startFight($this->characters[$i], $typeClass);
+
                 } else if ($choiceCharacter > count($this->characters)) {
                     $this->displayError();
                     return $this->choiceCharacter($typeClass);
@@ -240,7 +259,7 @@ class Game
     public function startGame()
     {
         echo "🐉 Dragon Ball Z\n\n";
-        echo "[1] ▶️  Jouer\n[2] 📊 Infos\n[3] 💾 Charger une sauvegarde\n[4] ❌Quitter \n\n";
+        echo "[1] ▶️  Jouer\n[2] 📊 Infos\n[3] 💾 Charger une sauvegarde\n[4] ❌ Quitter\n\n";
 
         $choiceMenu = (int) readline("Que voulez vous faire ? : ");
 
@@ -254,7 +273,10 @@ class Game
                 return $this->getInformations();
             case 3:
                 echo "Chargement de la sauvegarde...";
-                return $this->loadGame();
+                sleep(2);
+                popen('cls', 'w');
+                return $this->loadGame($currentCharacter, $currentEnemies);
+                break;
             case 4:
                 echo "Fermeture du jeu...";
                 sleep(2);
@@ -266,51 +288,28 @@ class Game
         }
     }
 
-    
-    public function saveGame()
+    public function saveGame($currentCharacter, $currentEnemies)
     {
-        if ($this->currentCharacter) {
-            $data = serialize($this->currentCharacter);
-
-            // Open the file for writing
-            $file = fopen('savegame.txt', 'w');
-
-            if ($file) {
-                // Write the serialized data to the file
-                fwrite($file, $data);
-                fclose($file); // Close the file
-                echo "Game saved!\n";
-            } else {
-                echo "Failed to open the save file for writing.\n";
-            }
-        } else {
-            echo "No character selected for saving.\n";
-        }
+        $save = fopen("save.txt", "w");
+        fwrite($save, $currentCharacter, $currentEnemies);
+        fclose($save);
     }
 
-    
-
-    public function loadGame()
+    public function loadGame($currentCharacter, $currentEnemies)
     {
-        if (file_exists('savegame.txt')) {
-            $data = file_get_contents('savegame.txt');
-            $this->currentCharacter = unserialize($data);
-            echo "Game loaded!\n";
-            return $this->fight($this->currentCharacter);
-        } else {
-            echo "No save file found.\n";
-        }
+        $load = fopen("save.txt", "r");
+        $currentCharacter.$currentEnemies = fread($load, filesize("save.txt"));
+        fclose($load);
     }
-    
 }
 
 $characters = [ // Création des personnages
-    $goku = new Hero("Goku", 150, 10),
+    $goku = new Hero("Goku", 100, 10),
     $picolo = new Hero("Picolo", 75, 10),
     $vegeta = new Hero("Vegeta", 150, 15),
-    $cell = new Evil("Cell", 200, 20),
-    $freezer = new Evil("Freezer", 200, 20),
-    $buu = new Evil("Buu", 250, 25)
+    $cell = new Evil("Cell", 40, 20),
+    $freezer = new Evil("Freezer", 40, 20),
+    $buu = new Evil("Buu", 50, 25)
 ];
 
 $game = new Game($characters); 
@@ -327,3 +326,4 @@ $game->startGame();
 
 // echo "\nAprès l'attaque de Vegeta :\n";
 // $vegeta->attack($goku);
+

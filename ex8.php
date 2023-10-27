@@ -15,5 +15,19 @@
             echo "Niveau (NV) : " . $this->nv . "\n";
         }
     }
+    class inventaire {
+        $marteau;
+        $epee;
+        $fleche;
+        public function __construct(){
+            $this->marteau = $marteau;
+            $this->epee = $epee;
+            $this->fleche = $fleche;
+        }
+
+    public function ajouter_objet(){
+        
+    }
+    }
 
 ?>
