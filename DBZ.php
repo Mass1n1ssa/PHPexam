@@ -95,7 +95,6 @@ class Game
     public function IsDead($currentCharacter) // Fonction pour vérifier si le personnage est mort
     {
         if ($currentCharacter->getHp() <= 0) { // Si les points de vie du personnage sont inférieurs ou égaux à 0, alors il renvoie true sinon false
-            // echo $currentCharacter->getName() . " est mort !\n";
             return true;
         }
         return false;
