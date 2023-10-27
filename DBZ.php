@@ -45,6 +45,8 @@ class Character
     }
 }
 
+
+
 class Hero extends Character
 {
     public function __construct($name, $hp, $damage)
@@ -52,6 +54,8 @@ class Hero extends Character
         parent::__construct($name, $hp, $damage);
     }
 }
+
+
 
 class Evil extends Character
 {
@@ -70,8 +74,7 @@ class Game
         $this->characters = $characters;
     }
 
-    public function getInfo()
-    {
+    public function getInfo(){
         echo "Informations\n\n";
 
         foreach ($this->characters as $character) {
@@ -79,6 +82,17 @@ class Game
         }
     }
 
+    public function choiceChar($c){
+        echo "Choisissez votre personnage\n\n";
+        $i = 1;
+        foreach ($this->characters as $character) {
+            if ($character instanceof $c) {
+                echo "[" . $i . "] " . $character->getName() . "\n";
+                $i++;
+            }
+        }
+    }
+    
     public function choiceCamp()
     {
         echo "Choisissez votre camp : \n\n";
@@ -87,10 +101,12 @@ class Game
 
         $choiceCamp = (int) readline("Votre choix : ");
 
+        popen('cls', 'w');
+
         if ($choiceCamp == 1) {
-            $this->choiceCharacter($choiceCamp);
+            $this->choiceChar("Hero");
         } else if ($choiceCamp == 2) {
-            $this->choiceCharacter($choiceCamp);
+            $this->choiceChar("Evil");
         } else {
             echo "Veuillez saisir un choix valide !";
             sleep(1);
@@ -128,9 +144,14 @@ class Game
     }
 }
 
+
 $characters = [
     $goku = new Hero("Goku", 100, 10),
-    $vegeta = new Evil("Vegeta", 150, 15)
+    $picolo = new Hero("Picolo", 100, 10),
+    $vegeta = new Hero("Vegeta", 150, 15),
+    $cell = new Evil("Cell", 200, 20),
+    $freezer = new Evil("Freezer", 200, 20),
+    $buu = new Evil("Buu", 250, 25)
 ];
 
 $game = new Game($characters);
