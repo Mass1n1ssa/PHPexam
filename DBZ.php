@@ -145,7 +145,7 @@ class Game
     public function fight($currentCharacter, $currentEnemies) 
     {
         while ($this->IsDead($currentCharacter) == false && $this->IsDead($currentEnemies) == false) {
-            echo "🧙 " . $currentCharacter->getName() . " | ❤️  " . $currentCharacter->getHp() . " | 💥 " . $currentCharacter->getKi() . "\n\n";
+            echo "👽 " . $currentCharacter->getName() . " | ❤️  " . $currentCharacter->getHp() . " | 💥 " . $currentCharacter->getKi() . "  \033[1mVS\033[0m  " . "🧙 " . $currentEnemies->getName() . " | ❤️  " . $currentEnemies->getHp() . " | 💥 " . $currentEnemies->getKi() . "\n\n";
 
             echo "[1] Attaquer\n[2] Fuir\n[3] Attaque spéciale\n[4] Sauvegarder\n\n";
             
@@ -308,7 +308,6 @@ class Game
         }
     }
 
-
     public function loadGame()
     {
         $file = fopen("savegame1.txt", "r");
@@ -332,9 +331,6 @@ class Game
             echo "Échec de l'ouverture du fichier de sauvegarde en lecture.\n";
         }
     }
-
-
-
 }
 
 $characters = [ // Création des personnages
