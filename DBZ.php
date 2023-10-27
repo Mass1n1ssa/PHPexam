@@ -1,12 +1,12 @@
 <?php
-class Character
+class Character // Creation of the class Character
 {
     protected string $name;
     protected int $ki;
     protected int $hp;
     protected int $damage;
 
-    public function __construct($name, $hp, $damage)
+    protected function __construct($name, $hp, $damage)
     {
         $this->name = $name;
         $this->ki = 0;
@@ -14,12 +14,12 @@ class Character
         $this->damage = $damage;
     }
 
-    public function attack($target)
+    protected function attack($target)
     {
         $target->hp -= $this->damage;
         $this->ki += 10;
-        echo $this->name . " attaque " . $target->name . " et lui inflige " . $this->damage . " points de dégats ! \n" . $this->name . " a maintenant " . $this->ki . " points de puissance ! \n";
-        echo $target->name . " a maintenant " . $target->hp . " points de vie ! \n";
+        // echo $this->name . " attaque " . $target->name . " et lui inflige " . $this->damage . " points de dégats ! \n" . $this->name . " a maintenant " . $this->ki . " points de puissance ! \n";
+        // echo $target->name . " a maintenant " . $target->hp . " points de vie ! \n";
     }
 
     public function getName()
@@ -32,20 +32,33 @@ class Character
         return $this->ki;
     }
 
+    public function getDamage()
+    {
+        return $this->damage;
+    }
+
     public function getHp()
     {
         return $this->hp;
     }
+
+    public function setKi($ki)
+    {
+        $this->ki = $ki;
+    }
+
+    public function setHp($hp)
+    {
+        $this->hp = $hp;
+    }
     
-    public function getInformations()
+    public function getInformation()
     {
         echo "\e[31mNom\e[0m : " . $this->name . "\n";
         echo "\033[38;5;208mKi\e[0m : " . $this->ki . "\n";
         echo "\e[32mPoint de Vie\e[0m : " . $this->hp . "\n\n";
     }
 }
-
-
 
 class Hero extends Character
 {
@@ -55,13 +68,11 @@ class Hero extends Character
     }
 }
 
-
-
 class Evil extends Character
 {
     public function __construct($name, $hp, $damage)
     {
-        parent::__construct($name, $hp, $damage);   
+        parent::__construct($name, $hp, $damage);
     }
 }
 
@@ -74,52 +85,151 @@ class Game
         $this->characters = $characters;
     }
 
-    public function getInfo(){
-        echo "Informations\n\n";
+    public function displayError()
+    {
+        echo "Veuillez saisir un choix valide !";
+        sleep(1);
+        popen('cls', 'w');
+    }
 
+    public function getInformations()
+    {
+        echo "Informations :\n\n";
         foreach ($this->characters as $character) {
-            echo $character->getInformations();
+            echo $character->getInformation();
         }
     }
 
-    public function choiceChar($c){
-        echo "Choisissez votre personnage\n\n";
-        $i = 1;
-        foreach ($this->characters as $character) {
-            if ($character instanceof $c) {
-                echo "[" . $i . "] " . $character->getName() . "\n";
-                $i++;
+    public function IsDead($currentCharacter) // Fonction pour vérifier si le personnage est mort
+    {
+        if ($currentCharacter->getHp() <= 0) {
+            // echo $currentCharacter->getName() . " est mort !\n";
+            return true;
+        }
+        return false;
+    }
+    
+    public function fight($currentCharacter, $typeClass) 
+    {
+        while ($this->IsDead($currentCharacter) == false) { // Boucle pour vérifier si le personnage est mort
+            echo "🧙 " . $currentCharacter->getName() . " | ❤️  " . $currentCharacter->getHp() . " | 💥 " . $currentCharacter->getKi() . "\n\n";
+    
+            echo "[1] Attaquer\n[2] Fuir\n[3] Attaque spéciale\n\n";
+            
+            $choiceAction = (int) readline("Que voulez vous faire ? : ");
+
+            popen('cls', 'w');
+
+            $valueKi = $currentCharacter->getKi();
+
+            for ($index = 0; $index < count($this->characters); $index++) { // Boucle pour afficher les personnages en fonction du camp choisi
+                if (!($this->characters[$index] instanceof $typeClass)) { // Ex : si $typeClass = "Hero" alors uniquement les personnages de type Hero seront affichés
+                    echo $this->characters[$index]->getName() . "\n";
+                }
+            }
+
+            switch ($choiceAction) 
+            {
+                case 1:
+                    echo "Vous avez attaquer ! ";
+                    echo $currentCharacter->getDamage() . " points de dégats ont été infligés !\n";
+                    $currentCharacter->setHp($currentCharacter->getHp() - $currentCharacter->getDamage());
+                    $currentCharacter->setKi($valueKi + 1);
+                    
+                    sleep(2);
+                    popen('cls', 'w');
+                    return $this->fight($currentCharacter, $typeClass);
+                case 2: 
+                    echo "Vous avez fuit ! ";
+                    sleep(2);
+                    popen('cls', 'w');
+                    return $this->fight($currentCharacter, $typeClass);
+                case 3:
+                    if ($valueKi >= 5) { // Si le personnage a 5 points de puissance ou plus, il peut utiliser une attaque spéciale
+                        $currentCharacter->setKi($valueKi - 5);
+                        $currentCharacter->setHp($currentCharacter->getHp() - 30);
+                        echo "Vous avez fait une attaque spéciale ! ";
+                        sleep(2);
+                        popen('cls', 'w');
+                    } else {
+                        echo "Vous n'avez pas assez de points de puissance ! ";
+                        sleep(2);
+                        popen('cls', 'w');
+                        return $this->fight($currentCharacter, $typeClass);
+                    }
+                    break;
+                default:
+                    $this->displayError();
+                    return $this->fight($currentCharacter, $typeClass);
+            }
+            popen('cls', 'w');
+        }
+
+        if ($this->IsDead($currentCharacter) == true) {
+            echo "Vous êtes mort !\n";
+            sleep(2);
+            popen('cls', 'w');
+            return $this->startGame();
+        }
+    }
+
+    public function choiceCharacter($typeClass)
+    {
+        echo "🧙 Choisissez votre personnage :\n\n";
+ 
+        for ($index = 0; $index < count($this->characters); $index++) { // Boucle pour afficher les personnages en fonction du camp choisi
+            if ($this->characters[$index] instanceof $typeClass) { // Ex : si $typeClass = "Hero" alors uniquement les personnages de type Hero seront affichés
+                echo "[" . ($index + 1) . "] " . $this->characters[$index]->getName() . "\n";
+            }
+        }
+
+        echo "\n";
+
+        $choiceCharacter = (int) readline("Votre choix : ");
+
+        popen('cls', 'w');
+
+        if ($choiceCharacter == null) {
+            $this->displayError();
+            return $this->choiceCharacter($typeClass);
+        }
+
+        for ($i = 0; $i < count($this->characters); $i++) {
+            if ($this->characters[$i] instanceof $typeClass) {
+                if ($choiceCharacter == $i + 1) {
+                    // $this->characters[$i]->setKi(10); // TEST A SUPPRIMER
+                    $this->fight($this->characters[$i], $typeClass); // Lancement du combat avec le personnage choisi
+                } else if ($choiceCharacter > count($this->characters)) {
+                    $this->displayError();
+                    return $this->choiceCharacter($typeClass);
+                } 
             }
         }
     }
-    
+
     public function choiceCamp()
     {
-        echo "Choisissez votre camp : \n\n";
-
+        echo "🚩 Choisissez votre camp : \n\n";
         echo "[1] Héro \n[2] Méchant\n\n";
 
-        $choiceCamp = (int) readline("Votre choix : ");
+        $choiceCamp = (int) readline("Que voulez vous faire ? : ");
 
         popen('cls', 'w');
 
         if ($choiceCamp == 1) {
-            $this->choiceChar("Hero");
+            $this->choiceCharacter("Hero");
         } else if ($choiceCamp == 2) {
-            $this->choiceChar("Evil");
+            $this->choiceCharacter("Evil");
         } else {
-            echo "Veuillez saisir un choix valide !";
-            sleep(1);
-            popen('cls', 'w');
+            $this->displayError();
             return $this->choiceCamp();
         }
     }
 
     public function startGame()
     {
-        echo "Dragon Ball Z\n\n";
-
-        echo "[1] Jouer \n[2] Infos \n[3] Charger une sauvegarde \n[4] Quitter\n\n";
+        echo "🐉 Dragon Ball Z\n\n";
+        echo "[1] ▶️  Jouer\n[2] 📊 Infos\n[3] 💾 Charger une sauvegarde\n[4] ❌ Quitter\n\n";
 
         $choiceMenu = (int) readline("Que voulez vous faire ? : ");
 
@@ -128,11 +238,9 @@ class Game
         switch ($choiceMenu) 
         {
             case 1:
-                $this->choiceCamp();
-                break;
+                return $this->choiceCamp();
             case 2:
-                $this->getInfo();
-                break;
+                return $this->getInformations();
             case 3:
                 break;
             case 4:
@@ -140,21 +248,23 @@ class Game
                 sleep(2);
                 popen('cls', 'w');
                 break;
+            default:
+                $this->displayError();
+                return $this->startGame();
         }
     }
 }
 
-
-$characters = [
+$characters = [ // Création des personnages
     $goku = new Hero("Goku", 100, 10),
-    $picolo = new Hero("Picolo", 100, 10),
+    $picolo = new Hero("Picolo", 75, 10),
     $vegeta = new Hero("Vegeta", 150, 15),
     $cell = new Evil("Cell", 200, 20),
     $freezer = new Evil("Freezer", 200, 20),
     $buu = new Evil("Buu", 250, 25)
 ];
 
-$game = new Game($characters);
+$game = new Game($characters); 
 $game->startGame();
 
 
