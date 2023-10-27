@@ -148,8 +148,6 @@ class Game
         while ($this->IsDead($currentCharacter) == false && $this->IsDead($currentEnemies) == false) {
             echo "🧙 " . $currentCharacter->getName() . " | ❤️  " . $currentCharacter->getHp() . " | 💥 " . $currentCharacter->getKi() . "\n\n";
 
-            echo "Vous fait un combat contre " . $currentEnemies->getName() ."". $currentEnemies->getHp() . "\n";
-
             echo "[1] Attaquer\n[2] Fuir\n[3] Attaque spéciale\n[4] Sauvegarder\n\n";
             
             $choiceAction = (int) readline("Que voulez vous faire ? : ");
