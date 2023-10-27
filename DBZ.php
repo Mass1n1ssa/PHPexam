@@ -14,14 +14,6 @@ class Character // Creation of the class Character
         $this->damage = $damage;
     }
 
-    protected function attack($target)
-    {
-        $target->hp -= $this->damage;
-        $this->ki += 10;
-        // echo $this->name . " attaque " . $target->name . " et lui inflige " . $this->damage . " points de dégats ! \n" . $this->name . " a maintenant " . $this->ki . " points de puissance ! \n";
-        // echo $target->name . " a maintenant " . $target->hp . " points de vie ! \n";
-    }
-
     public function getName()
     {
         return $this->name;
@@ -104,11 +96,23 @@ class Game
 
     public function IsDead($currentCharacter) // Fonction pour vérifier si le personnage est mort
     {
-        if ($currentCharacter->getHp() <= 0) {
+        if ($currentCharacter->getHp() <= 0) { // Si les points de vie du personnage sont inférieurs ou égaux à 0, alors il renvoie true sinon false
             // echo $currentCharacter->getName() . " est mort !\n";
             return true;
         }
         return false;
+    }
+
+    protected function attack($target)
+    {
+        $damageAttack = $target->getDamage();
+        $target->hp -= $damageAttack;
+
+        $this->ki += 10;
+
+        echo "Vous avez fait infligé " . $currentEnemies->getDamage() . " dégats à ennemi"; //METTRE ICI LE NOM DE L'ENNEMIE
+        $currentEnemies->setHp($currentEnemies->getHp() - $currentEnemies->getDamage());
+        $currentEnemies->setKi($valueKi + 1);
     }
 
     public function choiceEnemies($typeClass)
@@ -127,12 +131,13 @@ class Game
     {
         $enemies = $this->choiceEnemies($typeClass);
 
-        for ($i = 0; $i < 3; $i++ ) {
-            if ($i < count ($enemies))
-                $this->fight($currentCharacter, $enemies[$i]);
+        for ($i = 0; $i < 3; $i++ ) { // Création d'une boucle for pour faire 3 combats
+            if ($i < count ($enemies)) // Si le nombre d'ennemis est inférieur à 3, alors on continue les combats
+                $this->fight($currentCharacter, $enemies[$i]); // Exécution de la méthode fight avec le personnage choisi et son ennemi
             else {
                 popen('cls', 'w');
                 echo "Vous avez fini le jeu !";
+                sleep(3);
                 return;
             }
         }
@@ -226,11 +231,7 @@ class Game
         for ($i = 0; $i < count($this->characters); $i++) {
             if ($this->characters[$i] instanceof $typeClass) {
                 if ($choiceCharacter == $i + 1) {
-                    // $this->fight($this->characters[$i], $this->characters[$i]);
-
-                    // $this->startFight($currentCharacter, $currentEnemies); // CORRECT
                     $this->startFight($this->characters[$i], $typeClass);
-
                 } else if ($choiceCharacter > count($this->characters)) {
                     $this->displayError();
                     return $this->choiceCharacter($typeClass);
@@ -350,16 +351,3 @@ $characters = [ // Création des personnages
 
 $game = new Game($characters); 
 $game->startGame();
-
-
-// // Test
-// echo "Avant l'attaque : \n";
-// echo $goku->getName() . " a " . $goku->getKi() . " points de puissance et " . $goku->getHp() . " points de vie.\n";
-// echo $vegeta->getName() . " a " . $vegeta->getKi() . " points de puissance et " . $vegeta->getHp() . " points de vie.\n";
-
-// echo "\nAprès l'attaque :\n";
-// $goku->attack($vegeta);
-
-// echo "\nAprès l'attaque de Vegeta :\n";
-// $vegeta->attack($goku);
-
