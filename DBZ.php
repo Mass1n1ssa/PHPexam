@@ -70,7 +70,9 @@ class Evil extends Character
 
 class Game 
 {
-    private array $characters;
+    protected array $characters;
+    protected $currentCharacter = null;
+    protected $currentEnemies = null;
 
     public function __construct(array $characters)
     {
@@ -143,9 +145,9 @@ class Game
     public function fight($currentCharacter, $currentEnemies) 
     {
         while ($this->IsDead($currentCharacter) == false && $this->IsDead($currentEnemies) == false) {
-            echo "🦸🏻 " . $currentCharacter->getName() . " | ❤️  " . $currentCharacter->getHp() . " | 💥 " . $currentCharacter->getKi() . "  \033[1mVS\033[0m  " . "🧙 " . $currentEnemies->getName() . " | ❤️  " . $currentEnemies->getHp() . " | 💥 " . $currentEnemies->getKi() . "\n\n";
+            echo "🧙 " . $currentCharacter->getName() . " | ❤️  " . $currentCharacter->getHp() . " | 💥 " . $currentCharacter->getKi() . "\n\n";
 
-            echo "[1] Attaquer\n[2] Fuir\n[3] Attaque spéciale\n\n";
+            echo "[1] Attaquer\n[2] Fuir\n[3] Attaque spéciale\n[4] Sauvegarder\n\n";
             
             $choiceAction = (int) readline("Que voulez vous faire ? : ");
 
@@ -182,6 +184,11 @@ class Game
                         return $this->fight($currentCharacter, $currentEnemies);
                     }
                     break;
+                case 4:
+                    echo "sauvegarde en cours ...";
+                    sleep(2);
+                    popen('cls', 'w');
+                    return $this->saveGame($currentCharacter, $currentEnemies);
                 default:
                     $this->displayError();
                     return $this->fight($currentCharacter, $currentEnemies);
@@ -265,7 +272,10 @@ class Game
             case 2:
                 return $this->getInformations();
             case 3:
-                break;
+                echo "Chargement de la sauvegarde...";
+                sleep(2);
+                popen('cls', 'w');
+                return $this->loadGame();
             case 4:
                 echo "Fermeture du jeu...";
                 sleep(2);
@@ -276,6 +286,55 @@ class Game
                 return $this->startGame();
         }
     }
+
+    public function saveGame($currentCharacter, $currentEnemies)
+    {
+        if ($currentCharacter && $currentEnemies) {
+            $data = serialize([$currentCharacter, $currentEnemies]);
+
+            // Ouvrir le fichier en écriture
+            $file = fopen('savegame1.txt', 'w');
+
+            if ($file) {
+                // Écrire les données sérialisées dans le fichier
+                fwrite($file, $data);
+                fclose($file); // Fermer le fichier
+                echo "Jeu sauvegardé!\n";
+            } else {
+                echo "Échec de l'ouverture du fichier de sauvegarde en écriture.\n";
+            }
+        } else {
+            echo "Aucun personnage sélectionné pour la sauvegarde.\n";
+        }
+    }
+
+
+    public function loadGame()
+    {
+        $file = fopen("savegame1.txt", "r");
+
+        if ($file) {
+            $data = fread($file, filesize("savegame1.txt"));
+            fclose($file);
+
+            $loadedData = unserialize($data);
+
+            if (is_array($loadedData) && count($loadedData) == 2) {
+                list($currentCharacter, $currentEnemies) = $loadedData;
+                echo "Jeu chargé!\n";
+                $this->currentCharacter = $currentCharacter;
+                $this->currentEnemies = $currentEnemies;
+                return $this->fight($currentCharacter, $currentEnemies);
+            } else {
+                echo "Données de sauvegarde invalides.\n";
+            }
+        } else {
+            echo "Échec de l'ouverture du fichier de sauvegarde en lecture.\n";
+        }
+    }
+
+
+
 }
 
 $characters = [ // Création des personnages
