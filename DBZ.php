@@ -78,7 +78,9 @@ class Evil extends Character
 
 class Game 
 {
-    private array $characters;
+    protected array $characters;
+    protected $currentCharacter = null;
+    protected $currentEnemies = null;
 
     public function __construct(array $characters)
     {
@@ -275,8 +277,7 @@ class Game
                 echo "Chargement de la sauvegarde...";
                 sleep(2);
                 popen('cls', 'w');
-                return $this->loadGame($currentCharacter, $currentEnemies);
-                break;
+                return $this->loadGame();
             case 4:
                 echo "Fermeture du jeu...";
                 sleep(2);
@@ -290,17 +291,52 @@ class Game
 
     public function saveGame($currentCharacter, $currentEnemies)
     {
-        $save = fopen("save.txt", "w");
-        fwrite($save, $currentCharacter, $currentEnemies);
-        fclose($save);
+        if ($currentCharacter && $currentEnemies) {
+            $data = serialize([$currentCharacter, $currentEnemies]);
+
+            // Ouvrir le fichier en écriture
+            $file = fopen('savegame1.txt', 'w');
+
+            if ($file) {
+                // Écrire les données sérialisées dans le fichier
+                fwrite($file, $data);
+                fclose($file); // Fermer le fichier
+                echo "Jeu sauvegardé!\n";
+            } else {
+                echo "Échec de l'ouverture du fichier de sauvegarde en écriture.\n";
+            }
+        } else {
+            echo "Aucun personnage sélectionné pour la sauvegarde.\n";
+        }
     }
 
-    public function loadGame($currentCharacter, $currentEnemies)
+
+    public function loadGame()
     {
-        $load = fopen("save.txt", "r");
-        $currentCharacter.$currentEnemies = fread($load, filesize("save.txt"));
-        fclose($load);
+        $file = fopen("savegame1.txt", "r");
+
+        if ($file) {
+            $data = fread($file, filesize("savegame1.txt"));
+            fclose($file);
+
+            $loadedData = unserialize($data);
+
+            if (is_array($loadedData) && count($loadedData) == 2) {
+                list($currentCharacter, $currentEnemies) = $loadedData;
+                echo "Jeu chargé!\n";
+                $this->currentCharacter = $currentCharacter;
+                $this->currentEnemies = $currentEnemies;
+                return $this->fight($currentCharacter, $currentEnemies);
+            } else {
+                echo "Données de sauvegarde invalides.\n";
+            }
+        } else {
+            echo "Échec de l'ouverture du fichier de sauvegarde en lecture.\n";
+        }
     }
+
+
+
 }
 
 $characters = [ // Création des personnages

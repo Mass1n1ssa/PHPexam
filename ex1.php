@@ -4,6 +4,7 @@
     public $nb2 = 0;
     public $r = 0;
     public $i = 0;
+    }
     public function __construct($nb1,$nb2) {
         $this->nb1 = $nb1;
         $this->nb2 = $nb2;
@@ -23,5 +24,8 @@
         } else {
             $this->getNb();
         }
+    }
+    function add(){
+        $this->r = $this-> nb1 + $nb2
     }
 ?>
